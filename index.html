@@ -184,20 +184,35 @@
         .cart-modal-content button:hover {
             background-color: #a0522d;
         }
+        .promo-slider {
+    display: flex;
+    overflow: hidden; /* Скрываем полосу прокрутки */
+    position: relative;
+    width: 100%;
+    height: 150px; /* Высота карусели */
+}
+.promo-slider img {
+    min-width: 100%; /* Каждое изображение занимает всю ширину карусели */
+    height: 100%; /* Занимает всю высоту карусели */
+    object-fit: cover; /* Сохранение пропорций */
+    border-radius: 8px; /* Скругленные углы */
+    transition: transform 0.5s ease; /* Плавная анимация */
+}
     </style>
 </head>
 <body>
     <!-- Главный экран с акциями -->
-    <div id="start-screen">
-        <h2>Добро пожаловать в D.O.M!</h2>
-        <div class="promo-slider">
-            <img src="images/promo1.jpg" alt="Акция 1">
-            <img src="images/promo2.jpg" alt="Акция 2">
-            <img src="images/promo3.jpg" alt="Акция 3">
-        </div>
-        <p>Сегодня действуют скидки до 50% на горячие блюда!</p>
-        <button onclick="showMenu()">Перейти к меню</button>
+<div id="start-screen">
+    <h2>Добро пожаловать в D.O.M!</h2>
+    <div class="promo-slider">
+        <!-- Здесь добавьте свои изображения -->
+        <img src="images/promo1.jpg" alt="Акция 1">
+        <img src="images/promo2.jpg" alt="Акция 2">
+        <!-- Если нужно больше изображений, добавьте их здесь -->
     </div>
+    <p>Сегодня действуют скидки до 50% на горячие блюда!</p>
+    <button onclick="showMenu()">Перейти к меню</button>
+</div>
 
     <!-- Экран меню -->
     <div id="menu-screen" style="display: none;">
@@ -437,5 +452,39 @@
             alert("Оплатите заказ переводом на карту: 1234 5678 9012 3456");
         }
     </script>
+<script>
+    // Функция для автоматической прокрутки карусели
+    function startCarousel() {
+        const slider = document.querySelector('.promo-slider');
+        const images = slider.querySelectorAll('img');
+        let currentIndex = 0;
+
+        // Если изображений меньше 2, клонируем их для создания бесконечного цикла
+        if (images.length === 1) {
+            slider.appendChild(images[0].cloneNode(true)); // Клонируем единственное изображение
+        } else if (images.length === 2) {
+            slider.appendChild(images[0].cloneNode(true)); // Клонируем первое изображение
+            slider.appendChild(images[1].cloneNode(true)); // Клонируем второе изображение
+        }
+
+        // Обновляем список изображений после клонирования
+        const updatedImages = slider.querySelectorAll('img');
+
+        // Функция для переключения изображений
+        function nextImage() {
+            currentIndex++;
+            if (currentIndex >= updatedImages.length) {
+                currentIndex = 0; // Возвращаемся к первому изображению
+            }
+            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+
+        // Запускаем автоматическую прокрутку каждые 3 секунды
+        setInterval(nextImage, 3000);
+    }
+
+    // Запускаем карусель при загрузке страницы
+    document.addEventListener('DOMContentLoaded', startCarousel);
+</script>
 </body>
 </html>  
