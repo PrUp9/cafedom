@@ -10,22 +10,35 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         /* Общие стили */
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f5f2e9;
-            color: #4d382c;
-            margin: 0;
-            padding: 0;
-        }
-        h1, h2 {
-            text-align: center;
-            font-family: 'Lobster', cursive;
-            color: #b8860b;
-        }
+        body body {
+    font-family: 'Helvetica', sans-serif;
+    background-color: #f5f2e9;
+    color: #4d382c;
+    margin: 0;
+    padding: 0;
+}
+h1, h2 {
+    text-align: center;
+    font-family: 'Helvetica', sans-serif;
+    font-weight: bold;
+    color: #b8860b;
+    margin-top: 20px;
+}
+.fixed-cart h3 {
+    font-family: 'Helvetica', sans-serif;
+    font-weight: bold;
+    font-size: 1.5rem;
+    color: #b8860b;
+}
+.fixed-cart p {
+    font-family: 'Helvetica', sans-serif;
+    font-size: 1.1rem;
+}
         #start-screen {
             text-align: center;
             padding: 20px;
         }
+     
         .promo-slider {
             display: flex;
             overflow-x: auto;
@@ -220,9 +233,50 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.5s ease; /* Плавная анимация */
 }
+        .side-menu {
+    position: fixed;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 1000;
+}
+.side-button {
+    font-family: 'Helvetica', sans-serif;
+    font-weight: bold;
+    background-color: #f5f2e9;
+    color: #4d382c;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+.side-button:hover {
+    background-color: #a0522d;
+    color: white;
+    transform: scale(1.1);
+}
+.side-button.active {
+    background-color: #b8860b;
+    color: white;
+}
     </style>
 </head>
 <body>
+      <div class="side-menu">
+    <button class="side-button" onclick="switchCategory('Мангал')">Мангал</button>
+    <button class="side-button" onclick="switchCategory('Горячие блюда')">Горячие блюда</button>
+    <button class="side-button" onclick="switchCategory('Завтраки')">Завтраки</button>
+    <button class="side-button" onclick="switchCategory('Холодные закуски')">Холодные закуски</button>
+    <button class="side-button" onclick="switchCategory('Салаты')">Салаты</button>
+    <button class="side-button" onclick="switchCategory('Осетинские пироги')">Осетинские пироги</button>
+    <button class="side-button" onclick="switchCategory('Гарниры')">Гарниры</button>
+    <button class="side-button" onclick="switchCategory('Супы')">Супы</button>
+</div>
     <!-- Главный экран с акциями -->
 <div id="start-screen">
     <h2>Добро пожаловать в D.O.M!</h2>
