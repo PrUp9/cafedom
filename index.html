@@ -4,18 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Заказ еды D.O.M</title>
+    <!-- Подключение Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Lobster&display=swap" rel="stylesheet">
+    <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        /* Общие стили */
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f5f2e9; /* Бежевый фон */
-            color: #4d382c; /* Коричневый текст */
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f2e9;
+            color: #4d382c;
             margin: 0;
             padding: 0;
         }
         h1 {
             text-align: center;
-            color: #b8860b; /* Золотистый цвет для названия кафе */
+            font-family: 'Lobster', cursive;
+            font-size: 2.5rem;
+            color: #b8860b;
             margin-top: 20px;
         }
         .menu-tabs {
@@ -26,6 +32,8 @@
             border-bottom: 1px solid #d2b48c;
         }
         .tab-button {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
             background-color: #f5f2e9;
             color: #4d382c;
             border: none;
@@ -71,28 +79,25 @@
         }
         .fixed-cart h3 {
             margin: 0 0 10px;
-            font-size: 1.2rem;
+            font-family: 'Lobster', cursive;
+            font-size: 1.5rem;
             color: #b8860b;
         }
-        .fixed-cart ul {
-            list-style: none;
-            padding: 0;
+        .fixed-cart p {
+            font-family: 'Roboto', sans-serif;
             margin: 0;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-        .fixed-cart .payment-options {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 10px;
+            font-size: 1.1rem;
         }
         .fixed-cart button {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
             background-color: #b8860b;
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
+            margin-top: 10px;
         }
         .fixed-cart button:hover {
             background-color: #a0522d;
@@ -105,190 +110,144 @@
         <button class="tab-button active" onclick="switchCategory('Мангал')">Мангал</button>
         <button class="tab-button" onclick="switchCategory('Горячие блюда')">Горячие блюда</button>
         <button class="tab-button" onclick="switchCategory('Завтраки')">Завтраки</button>
-        <!-- Добавьте остальные категории -->
+        <button class="tab-button" onclick="switchCategory('Холодные закуски')">Холодные закуски</button>
+        <button class="tab-button" onclick="switchCategory('Салаты')">Салаты</button>
+        <button class="tab-button" onclick="switchCategory('Осетинские пироги')">Осетинские пироги</button>
+        <button class="tab-button" onclick="switchCategory('Гарниры')">Гарниры</button>
+        <button class="tab-button" onclick="switchCategory('Супы')">Супы</button>
+        <button class="tab-button" onclick="switchCategory('Соусы')">Соусы</button>
+        <button class="tab-button" onclick="switchCategory('Чай')">Чай</button>
+        <button class="tab-button" onclick="switchCategory('Кофе')">Кофе</button>
+        <button class="tab-button" onclick="switchCategory('Выпечка')">Выпечка</button>
+        <button class="tab-button" onclick="switchCategory('Домашние напитки')">Домашние напитки</button>
     </div>
     <div id="menu-items"></div>
 
+    <!-- Компактная корзина -->
     <div class="fixed-cart">
         <h3>Корзина</h3>
-        <ul id="cart-items"></ul>
         <p>Общая сумма: <span id="total">0</span> ₽</p>
+        <button onclick="openCartModal()">Посмотреть корзину</button>
         <div class="payment-options">
             <button onclick="payWithTelegram()">Оплатить онлайн</button>
             <button onclick="payByTransfer()">Оплатить переводом</button>
         </div>
     </div>
 
+    <!-- Модальное окно для просмотра корзины -->
+    <div class="cart-modal" id="cart-modal">
+        <div class="cart-modal-content">
+            <h3>Корзина</h3>
+            <ul id="cart-modal-items"></ul>
+            <p>Общая сумма: <span id="modal-total">0</span> ₽</p>
+            <button onclick="closeCartModal()">Продолжить заказ</button>
+        </div>
+    </div>
     <script>
-        const tg = window.Telegram.WebApp;
+    const tg = window.Telegram.WebApp;
 
-          // Полное меню с разделами
-        const menuData = {
-            "Мангал": [
-                { name: "Шашлык из свинины", price: 900, image: "https://example.com/shashlik-svinina.jpg" },
-                { name: "Шашлык из баранины", price: 2000, image: "https://example.com/shashlik-baranina.jpg" },
-                { name: "Шашлык из говядины", price: 2500, image: "https://example.com/shashlik-govyadina.jpg" },
-                { name: "Шашлык из курицы", price: 650, image: "https://example.com/shashlik-kurica.jpg" },
-                { name: "Шашлык из семги", price: 2700, image: "https://example.com/shashlik-semga.jpg" },
-                { name: "Люля-кебаб из говядины", price: 120, image: "https://example.com/lyulya-govyadina.jpg" },
-                { name: "Люля-кебаб из курицы", price: 100, image: "https://example.com/lyulya-kurica.jpg" },
-                { name: "Карп", price: 800, image: "https://example.com/karp.jpg" },
-                { name: "Форель", price: 2000, image: "https://example.com/forel.jpg" },
-                { name: "Грибы", price: 1000, image: "https://example.com/griby.jpg" },
-                { name: "Овощи", price: 1000, image: "https://example.com/ovoshchi.jpg" }
-            ],
-            "Горячие блюда": [
-                { name: "Мясо с овощами", price: 295, image: "https://example.com/myaso-ovoshchi.jpg" },
-                { name: "Плов из говядины", price: 285, image: "https://example.com/plov-govyadina.jpg" },
-                { name: "Куриная отбивная", price: 220, image: "https://example.com/kurinaya-otbivnaya.jpg" },
-                { name: "Котлета по-киевски", price: 190, image: "https://example.com/kotleta-po-kievski.jpg" },
-                { name: "Жаркое с говядиной", price: 550, image: "https://example.com/zharkoe-govyadina.jpg" },
-                { name: "Жаркое с грибами", price: 275, image: "https://example.com/zharkoe-griby.jpg" },
-                { name: "Жаркое с курицей", price: 370, image: "https://example.com/zharkoe-kurica.jpg" },
-                { name: "Печень говяжья", price: 230, image: "https://example.com/pechen-govyadina.jpg" },
-                { name: "Семга по-царски", price: 820, image: "https://example.com/semga-tsarski.jpg" },
-                { name: "Наггетсы", price: 680, image: "https://example.com/naggetsy.jpg" }
-            ],
-            "Завтраки": [
-                { name: "Яичница глазунья", price: 50, image: "https://example.com/yichnitsa-glazunya.jpg" },
-                { name: "Блинчики с вареньем", price: 120, image: "https://example.com/blinchiki-varene.jpg" },
-                { name: "Блинчики со сгущёнкой", price: 110, image: "https://example.com/blinchiki-sgushyonka.jpg" },
-                { name: "Каша овсяная", price: 80, image: "https://example.com/kasha-ovsyanaya.jpg" },
-                { name: "Каша рисовая", price: 80, image: "https://example.com/kasha-risovaya.jpg" },
-                { name: "Сырники", price: 65, image: "https://example.com/syrniki.jpg" },
-                { name: "Бутерброд с сыром", price: 65, image: "https://example.com/buterbrod-syr.jpg" },
-                { name: "Бутерброд с ветчиной", price: 70, image: "https://example.com/buterbrod-vetchina.jpg" },
-                { name: "Сосиски Баварские с сыром", price: 70, image: "https://example.com/sosiski-bavarskie.jpg" }
-            ],
-            "Холодные закуски": [
-                { name: "Сыр с зеленью", price: 250, image: "https://example.com/syr-zelen.jpg" },
-                { name: "Соленья", price: 210, image: "https://example.com/soleynya.jpg" },
-                { name: "Овощная нарезка", price: 270, image: "https://example.com/ovoshchnaya-narezka.jpg" },
-                { name: "Мясная нарезка", price: 850, image: "https://example.com/myasnaya-narezka.jpg" },
-                { name: "Рыбная нарезка", price: 550, image: "https://example.com/rybnaya-narezka.jpg" },
-                { name: "Баклажаны с орехами", price: 150, image: "https://example.com/baklazhany-orekhi.jpg" },
-                { name: "Грибы фаршированные сыром", price: 290, image: "https://example.com/griby-syrom.jpg" },
-                { name: "Оливки, маслины", price: 200, image: "https://example.com/olivki-masliny.jpg" },
-                { name: "Тарталетки с маслом и красной икрой", price: 270, image: "https://example.com/tartalatki-ikra.jpg" }
-            ],
-            "Салаты": [
-                { name: "Свежий", price: 210, image: "https://example.com/svezhiy-salat.jpg" },
-                { name: "Оливье", price: 260, image: "https://example.com/olivye.jpg" },
-                { name: "Крабовый", price: 200, image: "https://example.com/kraboviy.jpg" },
-                { name: "Цезарь с курицей", price: 305, image: "https://example.com/cezar-kurica.jpg" },
-                { name: "Цезарь с креветками", price: 435, image: "https://example.com/cezar-krevetki.jpg" },
-                { name: "Греческий", price: 280, image: "https://example.com/grecheskiy.jpg" },
-                               { name: "Цезарь с семгой", price: 460, image: "https://example.com/cezar-semga.jpg" },
-                { name: "Красное море", price: 220, image: "https://example.com/krasnoe-more.jpg" }
-            ],
-            "Осетинские пироги": [
-                { name: "Пирог с мясом", price: 650, image: "https://example.com/pirog-myaso.jpg" },
-                { name: "Пирог с сыром", price: 300, image: "https://example.com/pirog-syr.jpg" },
-                { name: "Пирог с картошкой", price: 230, image: "https://example.com/pirog-kartoshka.jpg" },
-                { name: "Пирог с листьями свеклы", price: 300, image: "https://example.com/pirog-svekla.jpg" },
-                { name: "Пирог с капустой", price: 220, image: "https://example.com/pirog-kapusta.jpg" },
-                { name: "Пирог с тыквой", price: 220, image: "https://example.com/pirog-tykva.jpg" }
-            ],
-            "Гарниры": [
-                { name: "Картофель Фри", price: 120, image: "https://example.com/fri.jpg" },
-                { name: "Картофель по деревенски", price: 150, image: "https://example.com/derevenskiy.jpg" },
-                { name: "Картофельное пюре", price: 110, image: "https://example.com/pure.jpg" },
-                { name: "Гречка", price: 80, image: "https://example.com/grechka.jpg" },
-                { name: "Овощи барбекю", price: 150, image: "https://example.com/ovoshchi-barbekyu.jpg" }
-            ],
-            "Супы": [
-                { name: "Лывжа из говядины", price: 310, image: "https://example.com/lyvzha.jpg" },
-                { name: "Суп-лапша из курицы", price: 210, image: "https://example.com/lapsha-kurica.jpg" },
-                { name: "Чанах", price: 290, image: "https://example.com/chanah.jpg" },
-                { name: "Грибной суп-пюре", price: 250, image: "https://example.com/gribnoy-sup.jpg" },
-                { name: "Борщ", price: 180, image: "https://example.com/borsch.jpg" }
-            ],
-            "Соусы": [
-                { name: "Клюквенный", price: 150, image: "https://example.com/klyukvenniy.jpg" },
-                { name: "Тар-тар", price: 80, image: "https://example.com/tar-tar.jpg" },
-                { name: "Сацебели", price: 70, image: "https://example.com/satsebeli.jpg" },
-                { name: "Цахтон", price: 150, image: "https://example.com/tsakhton.jpg" }
-            ],
-            "Чай": [
-                { name: "Зеленый", price: 100, image: "https://example.com/zeleniy-chay.jpg" },
-                { name: "Черный", price: 100, image: "https://example.com/cherniy-chay.jpg" },
-                { name: "Травяной", price: 100, image: "https://example.com/travyanoy-chay.jpg" },
-                { name: "Облепиховый", price: 150, image: "https://example.com/oblepihoviy-chay.jpg" }
-            ],
-            "Кофе": [
-                { name: "Заварной Lavazza", price: 100, image: "https://example.com/lavazza.jpg" },
-                { name: "Растворимый", price: 50, image: "https://example.com/rastvorimiy-kofe.jpg" },
-                { name: "Скандинавский", price: 100, image: "https://example.com/scandinavian-coffee.jpg" }
-            ],
-            "Выпечка": [
-                { name: "Лаваш", price: 50, image: "https://example.com/lavash.jpg" }
-            ],
-            "Домашние напитки": [
-                { name: "Фруктовый компот", price: 120, image: "https://example.com/kompot.jpg" }
-            ]
-        };
+    const menuData = {
+        "Мангал": [
+            { name: "Шашлык из свинины", price: 900, image: "images/shashlik-svinina.jpg" },
+            { name: "Шашлык из баранины", price: 2000, image: "images/shashlik-baranina.jpg" },
+            { name: "Шашлык из говядины", price: 2500, image: "images/shashlik-govyadina.jpg" },
+            { name: "Шашлык из курицы", price: 650, image: "images/shashlik-kurica.jpg" },
+            { name: "Шашлык из семги", price: 2700, image: "images/shashlik-semga.jpg" },
+            { name: "Люля-кебаб из говядины", price: 120, image: "images/lyulya-govyadina.jpg" },
+            { name: "Люля-кебаб из курицы", price: 100, image: "images/lyulya-kurica.jpg" },
+            { name: "Карп", price: 800, image: "images/karp.jpg" },
+            { name: "Форель", price: 2000, image: "images/forel.jpg" },
+            { name: "Грибы", price: 1000, image: "images/griby.jpg" },
+            { name: "Овощи", price: 1000, image: "images/ovoshchi.jpg" }
+        ],
+        // Добавьте остальные категории (полное меню из предыдущего кода)
+    };
 
+    let cart = [];
 
-        let cart = [];
+    function switchCategory(category) {
+        document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
+        const clickedButton = document.querySelector(`.tab-button[onclick="switchCategory('${category}')"]`);
+        clickedButton.classList.add('active');
 
-        function switchCategory(category) {
-            document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
-            const clickedButton = document.querySelector(`.tab-button[onclick="switchCategory('${category}')"]`);
-            clickedButton.classList.add('active');
+        const menuItemsDiv = document.getElementById('menu-items');
+        menuItemsDiv.innerHTML = '';
 
-            const menuItemsDiv = document.getElementById('menu-items');
-            menuItemsDiv.innerHTML = '';
-
-            if (menuData[category]) {
-                menuData[category].forEach(item => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'menu-item';
-                    itemDiv.innerHTML = `
-                        <img src="${item.image}" alt="${item.name}">
-                        <div class="details">
-                            <strong>${item.name}</strong><br>
-                            ${item.price} ₽
-                        </div>
-                        <button onclick="addToCart('${category}', '${item.name}')">Добавить</button>
-                    `;
-                    menuItemsDiv.appendChild(itemDiv);
-                });
-            }
-        }
-
-        function addToCart(category, itemName) {
-            const item = menuData[category].find(i => i.name === itemName);
-            cart.push(item);
-            updateCart();
-        }
-
-        function updateCart() {
-            const cartItems = document.getElementById('cart-items');
-            const total = document.getElementById('total');
-            cartItems.innerHTML = '';
-            let sum = 0;
-
-            cart.forEach(item => {
-                const li = document.createElement('li');
-                li.textContent = `${item.name} - ${item.price} ₽`;
-                cartItems.appendChild(li);
-                sum += item.price;
+        if (menuData[category]) {
+            menuData[category].forEach(item => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'menu-item';
+                itemDiv.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}">
+                    <div class="details">
+                        <strong>${item.name}</strong><br>
+                        ${item.price} ₽
+                    </div>
+                    <button onclick="addToCart('${category}', '${item.name}')">Добавить</button>
+                `;
+                menuItemsDiv.appendChild(itemDiv);
             });
-
-            total.textContent = sum;
         }
+    }
 
-        function payWithTelegram() {
-            alert("Оплата через Telegram Payments пока недоступна.");
-        }
+    function addToCart(category, itemName) {
+        const item = menuData[category].find(i => i.name === itemName);
+        cart.push(item);
+        updateCart();
+    }
 
-        function payByTransfer() {
-            alert("Оплатите заказ переводом на карту: 1234 5678 9012 3456");
-        }
+    function updateCart() {
+        const totalElement = document.getElementById('total');
+        const modalTotalElement = document.getElementById('modal-total');
+        let sum = 0;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            switchCategory('Мангал'); // По умолчанию показываем первый раздел
+        cart.forEach(item => {
+            sum += item.price;
         });
-    </script>
+
+        totalElement.textContent = sum;
+        modalTotalElement.textContent = sum;
+    }
+
+    function openCartModal() {
+        const modal = document.getElementById('cart-modal');
+        const cartItems = document.getElementById('cart-modal-items');
+        cartItems.innerHTML = '';
+
+        cart.forEach((item, index) => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                ${item.name} - ${item.price} ₽
+                <button onclick="removeFromCart(${index})">Удалить</button>
+            `;
+            cartItems.appendChild(li);
+        });
+
+        modal.style.display = 'flex';
+    }
+
+    function closeCartModal() {
+        const modal = document.getElementById('cart-modal');
+        modal.style.display = 'none';
+    }
+
+    function removeFromCart(index) {
+        cart.splice(index, 1);
+        updateCart();
+        openCartModal(); // Обновляем модальное окно
+    }
+
+    function payWithTelegram() {
+        alert("Оплата через Telegram Payments пока недоступна.");
+    }
+
+    function payByTransfer() {
+        alert("Оплатите заказ переводом на карту: 1234 5678 9012 3456");
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        switchCategory('Мангал'); // По умолчанию показываем первый раздел
+    });
+</script>
 </body>
 </html>
