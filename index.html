@@ -10,86 +10,121 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         /* Общие стили */
-        body body {
-    font-family: 'Helvetica', sans-serif;
-    background-color: #f5f2e9;
-    color: #4d382c;
-    margin: 0;
-    padding: 0;
-}
-h1, h2 {
-    text-align: center;
-    font-family: 'Helvetica', sans-serif;
-    font-weight: bold;
-    color: #b8860b;
-    margin-top: 20px;
-}
-.fixed-cart h3 {
-    font-family: 'Helvetica', sans-serif;
-    font-weight: bold;
-    font-size: 1.5rem;
-    color: #b8860b;
-}
-.fixed-cart p {
-    font-family: 'Helvetica', sans-serif;
-    font-size: 1.1rem;
-}
+        body {
+            font-family: 'Helvetica', sans-serif;
+            background-color: #f5f2e9;
+            color: #4d382c;
+            margin: 0;
+            padding: 0;
+        }
+        h1, h2 {
+            text-align: center;
+            font-family: 'Helvetica', sans-serif;
+            font-weight: bold;
+            color: #b8860b;
+            margin-top: 20px;
+        }
+        .fixed-cart h3 {
+            font-family: 'Helvetica', sans-serif;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #b8860b;
+        }
+        .fixed-cart p {
+            font-family: 'Helvetica', sans-serif;
+            font-size: 1.1rem;
+        }
         #start-screen {
             text-align: center;
             padding: 20px;
         }
-     
-        .promo-slider {
+        .text-carousel {
             display: flex;
-            overflow-x: auto;
-            gap: 10px;
-            padding: 10px;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            height: 100px;
         }
-        .promo-slider img {
-            width: 200px;
-            height: 150px;
-            object-fit: cover;
+        .carousel-item {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Helvetica', sans-serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4d382c;
+            background-color: #fff8dc;
             border-radius: 8px;
-        }
-        #start-screen button {
-            font-family: 'Roboto', sans-serif;
-            font-weight: 700;
-            background-color: #b8860b;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        #start-screen button:hover {
-            background-color: #a0522d;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.5s ease;
         }
         .menu-tabs {
             display: flex;
-            overflow-x: auto;
-            background-color: #fff8dc;
+            flex-direction: column;
+            gap: 10px;
             padding: 10px;
+            background-color: #fff8dc;
             border-bottom: 1px solid #d2b48c;
         }
+        .tab-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
         .tab-button {
-            font-family: 'Roboto', sans-serif;
-            font-weight: 700;
+            font-family: 'Helvetica', sans-serif;
+            font-weight: bold;
             background-color: #f5f2e9;
             color: #4d382c;
             border: none;
-            padding: 10px 20px;
-            margin-right: 10px;
+            padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1rem;
+            font-size: 0.9rem;
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            flex: 1;
+        }
+        .tab-button:hover {
+            background-color: #a0522d;
+            color: white;
+            transform: scale(1.1);
         }
         .tab-button.active {
             background-color: #b8860b;
             color: white;
         }
-        .tab-button:hover {
+        .side-menu {
+            position: fixed;
+            top: 50%;
+            left: 10px;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        .side-button {
+            font-family: 'Helvetica', sans-serif;
+            font-weight: bold;
+            background-color: #f5f2e9;
+            color: #4d382c;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .side-button:hover {
             background-color: #a0522d;
+            color: white;
+            transform: scale(1.1);
+        }
+        .side-button.active {
+            background-color: #b8860b;
+            color: white;
         }
         .menu-item {
             display: flex;
@@ -118,20 +153,9 @@ h1, h2 {
             z-index: 1000;
             border-top: 1px solid #d2b48c;
         }
-        .fixed-cart h3 {
-            margin: 0 0 10px;
-            font-family: 'Lobster', cursive;
-            font-size: 1.5rem;
-            color: #b8860b;
-        }
-        .fixed-cart p {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            font-size: 1.1rem;
-        }
         .fixed-cart button {
-            font-family: 'Roboto', sans-serif;
-            font-weight: 700;
+            font-family: 'Helvetica', sans-serif;
+            font-weight: bold;
             background-color: #b8860b;
             color: white;
             border: none;
@@ -164,7 +188,7 @@ h1, h2 {
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         .cart-modal-content h3 {
-            font-family: 'Lobster', cursive;
+            font-family: 'Helvetica', sans-serif;
             margin: 0 0 15px;
             font-size: 1.5rem;
             color: #b8860b;
@@ -177,15 +201,15 @@ h1, h2 {
             overflow-y: auto;
         }
         .cart-modal-content li {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Helvetica', sans-serif;
             display: flex;
             justify-content: space-between;
             padding: 10px 0;
             border-bottom: 1px solid #d2b48c;
         }
         .cart-modal-content button {
-            font-family: 'Roboto', sans-serif;
-            font-weight: 700;
+            font-family: 'Helvetica', sans-serif;
+            font-weight: bold;
             background-color: #b8860b;
             color: white;
             border: none;
@@ -197,116 +221,37 @@ h1, h2 {
         .cart-modal-content button:hover {
             background-color: #a0522d;
         }
-        .promo-slider {
-    display: flex;
-    overflow: hidden; /* Скрываем полосу прокрутки */
-    position: relative;
-    width: 100%;
-    height: 150px; /* Высота карусели */
-}
-.promo-slider img {
-    min-width: 100%; /* Каждое изображение занимает всю ширину карусели */
-    height: 100%; /* Занимает всю высоту карусели */
-    object-fit: cover; /* Сохранение пропорций */
-    border-radius: 8px; /* Скругленные углы */
-    transition: transform 0.5s ease; /* Плавная анимация */
-}
-        .text-carousel {
-    display: flex;
-    overflow: hidden; /* Скрываем полосу прокрутки */
-    position: relative;
-    width: 100%;
-    height: 100px; /* Высота карусели */
-}
-.carousel-item {
-    min-width: 100%; /* Каждый текстовый блок занимает всю ширину карусели */
-    height: 100%; /* Занимает всю высоту карусели */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Helvetica', sans-serif;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #4d382c;
-    background-color: #fff8dc;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.5s ease; /* Плавная анимация */
-}
-        .side-menu {
-    position: fixed;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 1000;
-}
-.side-button {
-    font-family: 'Helvetica', sans-serif;
-    font-weight: bold;
-    background-color: #f5f2e9;
-    color: #4d382c;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-.side-button:hover {
-    background-color: #a0522d;
-    color: white;
-    transform: scale(1.1);
-}
-.side-button.active {
-    background-color: #b8860b;
-    color: white;
-}
     </style>
 </head>
 <body>
-      <div class="side-menu">
-    <button class="side-button" onclick="switchCategory('Мангал')">Мангал</button>
-    <button class="side-button" onclick="switchCategory('Горячие блюда')">Горячие блюда</button>
-    <button class="side-button" onclick="switchCategory('Завтраки')">Завтраки</button>
-    <button class="side-button" onclick="switchCategory('Холодные закуски')">Холодные закуски</button>
-    <button class="side-button" onclick="switchCategory('Салаты')">Салаты</button>
-    <button class="side-button" onclick="switchCategory('Осетинские пироги')">Осетинские пироги</button>
-    <button class="side-button" onclick="switchCategory('Гарниры')">Гарниры</button>
-    <button class="side-button" onclick="switchCategory('Супы')">Супы</button>
-</div>
-    <!-- Главный экран с акциями -->
-<div id="start-screen">
-    <h2>Добро пожаловать в D.O.M!</h2>
-    <div class="text-carousel">
-        <!-- Текстовые блоки -->
-        <div class="carousel-item">🔥 Специальное предложение: скидка 50% на горячие блюда!</div>
-        <div class="carousel-item">🎉 Бесплатная доставка при заказе от 1500 рублей.</div>
-        <div class="carousel-item">💝 Получите подарок при первом заказе через Telegram.</div>
+    <!-- Главный экран -->
+    <div id="start-screen">
+        <h2>Добро пожаловать в D.O.M!</h2>
+        <div class="text-carousel">
+            <div class="carousel-item">🔥 Специальное предложение: скидка 50% на горячие блюда!</div>
+            <div class="carousel-item">🎉 Бесплатная доставка при заказе от 1500 рублей.</div>
+            <div class="carousel-item">💝 Получите подарок при первом заказе через Telegram.</div>
+        </div>
+        <p>Сегодня действуют скидки до 50% на горячие блюда!</p>
+        <button onclick="showMenu()">Перейти к меню</button>
     </div>
-    <p>Сегодня действуют скидки до 50% на горячие блюда!</p>
-    <button onclick="showMenu()">Перейти к меню</button>
-</div>
 
     <!-- Экран меню -->
     <div id="menu-screen" style="display: none;">
         <h1>“D.O.M”</h1>
         <div class="menu-tabs">
-            <button class="tab-button active" onclick="switchCategory('Мангал')">Мангал</button>
-            <button class="tab-button" onclick="switchCategory('Горячие блюда')">Горячие блюда</button>
-            <button class="tab-button" onclick="switchCategory('Завтраки')">Завтраки</button>
-            <button class="tab-button" onclick="switchCategory('Холодные закуски')">Холодные закуски</button>
-            <button class="tab-button" onclick="switchCategory('Салаты')">Салаты</button>
-            <button class="tab-button" onclick="switchCategory('Осетинские пироги')">Осетинские пироги</button>
-            <button class="tab-button" onclick="switchCategory('Гарниры')">Гарниры</button>
-            <button class="tab-button" onclick="switchCategory('Супы')">Супы</button>
-            <button class="tab-button" onclick="switchCategory('Соусы')">Соусы</button>
-            <button class="tab-button" onclick="switchCategory('Чай')">Чай</button>
-            <button class="tab-button" onclick="switchCategory('Кофе')">Кофе</button>
-            <button class="tab-button" onclick="switchCategory('Выпечка')">Выпечка</button>
-            <button class="tab-button" onclick="switchCategory('Домашние напитки')">Домашние напитки</button>
+            <div class="tab-row">
+                <button class="tab-button active" onclick="switchCategory('Мангал')">Мангал</button>
+                <button class="tab-button" onclick="switchCategory('Горячие блюда')">Горячие блюда</button>
+                <button class="tab-button" onclick="switchCategory('Завтраки')">Завтраки</button>
+                <button class="tab-button" onclick="switchCategory('Холодные закуски')">Холодные закуски</button>
+            </div>
+            <div class="tab-row">
+                <button class="tab-button" onclick="switchCategory('Салаты')">Салаты</button>
+                <button class="tab-button" onclick="switchCategory('Осетинские пироги')">Осетинские пироги</button>
+                <button class="tab-button" onclick="switchCategory('Гарниры')">Гарниры</button>
+                <button class="tab-button" onclick="switchCategory('Супы')">Супы</button>
+            </div>
         </div>
         <div id="menu-items"></div>
     </div>
@@ -330,6 +275,18 @@ h1, h2 {
             <p>Общая сумма: <span id="modal-total">0</span> ₽</p>
             <button onclick="closeCartModal()">Продолжить заказ</button>
         </div>
+    </div>
+
+    <!-- Боковая панель -->
+    <div class="side-menu">
+        <button class="side-button" onclick="switchCategory('Мангал')">Мангал</button>
+        <button class="side-button" onclick="switchCategory('Горячие блюда')">Горячие блюда</button>
+        <button class="side-button" onclick="switchCategory('Завтраки')">Завтраки</button>
+        <button class="side-button" onclick="switchCategory('Холодные закуски')">Холодные закуски</button>
+        <button class="side-button" onclick="switchCategory('Салаты')">Салаты</button>
+        <button class="side-button" onclick="switchCategory('Осетинские пироги')">Осетинские пироги</button>
+        <button class="side-button" onclick="switchCategory('Гарниры')">Гарниры</button>
+        <button class="side-button" onclick="switchCategory('Супы')">Супы</button>
     </div>
 
     <script>
@@ -373,13 +330,13 @@ h1, h2 {
                 { name: "Сосиски Баварские с сыром", price: 70, image: "images/sosiski-bavarskie.jpg" }
             ],
             "Холодные закуски": [
-                              { name: "Сыр с зеленью", price: 250, image: "images/syr-zelen.jpg" },
+                { name: "Сыр с зеленью", price: 250, image: "images/syr-zelen.jpg" },
                 { name: "Соленья", price: 210, image: "images/soleynya.jpg" },
                 { name: "Овощная нарезка", price: 270, image: "images/ovoshchnaya-narezka.jpg" },
                 { name: "Мясная нарезка", price: 850, image: "images/myasnaya-narezka.jpg" },
                 { name: "Рыбная нарезка", price: 550, image: "images/rybnaya-narezka.jpg" },
                 { name: "Баклажаны с орехами", price: 150, image: "images/baklazhany-orekhi.jpg" },
-                { name: "Грибы фаршированные сыром", price: 290, image: "images/griby-syrom.jpg" },
+                                { name: "Грибы фаршированные сыром", price: 290, image: "images/griby-syrom.jpg" },
                 { name: "Оливки, маслины", price: 200, image: "images/olivki-masliny.jpg" },
                 { name: "Тарталетки с маслом и красной икрой", price: 270, image: "images/tartalatki-ikra.jpg" }
             ],
@@ -527,74 +484,39 @@ h1, h2 {
         function payByTransfer() {
             alert("Оплатите заказ переводом на карту: 1234 5678 9012 3456");
         }
+
+        // Функция для автоматической прокрутки текстовой карусели
+        function startTextCarousel() {
+            const carousel = document.querySelector('.text-carousel');
+            const items = carousel.querySelectorAll('.carousel-item');
+            let currentIndex = 0;
+
+            // Если текстовых блоков меньше 2, клонируем их для создания бесконечного цикла
+            if (items.length === 1) {
+                carousel.appendChild(items[0].cloneNode(true)); // Клонируем единственный блок
+            } else if (items.length === 2) {
+                carousel.appendChild(items[0].cloneNode(true)); // Клонируем первый блок
+                carousel.appendChild(items[1].cloneNode(true)); // Клонируем второй блок
+            }
+
+            // Обновляем список текстовых блоков после клонирования
+            const updatedItems = carousel.querySelectorAll('.carousel-item');
+
+            // Функция для переключения текстовых блоков
+            function nextItem() {
+                currentIndex++;
+                if (currentIndex >= updatedItems.length) {
+                    currentIndex = 0; // Возвращаемся к первому блоку
+                }
+                carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+            }
+
+            // Запускаем автоматическую прокрутку каждые 3 секунды
+            setInterval(nextItem, 3000);
+        }
+
+        // Запускаем текстовую карусель при загрузке страницы
+        document.addEventListener('DOMContentLoaded', startTextCarousel);
     </script>
-<script>
-    // Функция для автоматической прокрутки карусели
-    function startCarousel() {
-        const slider = document.querySelector('.promo-slider');
-        const images = slider.querySelectorAll('img');
-        let currentIndex = 0;
-
-        // Если изображений меньше 2, клонируем их для создания бесконечного цикла
-        if (images.length === 1) {
-            slider.appendChild(images[0].cloneNode(true)); // Клонируем единственное изображение
-        } else if (images.length === 2) {
-            slider.appendChild(images[0].cloneNode(true)); // Клонируем первое изображение
-            slider.appendChild(images[1].cloneNode(true)); // Клонируем второе изображение
-        }
-
-        // Обновляем список изображений после клонирования
-        const updatedImages = slider.querySelectorAll('img');
-
-        // Функция для переключения изображений
-        function nextImage() {
-            currentIndex++;
-            if (currentIndex >= updatedImages.length) {
-                currentIndex = 0; // Возвращаемся к первому изображению
-            }
-            slider.style.transform = `translateX(-${currentIndex * 100}%)`;
-        }
-
-        // Запускаем автоматическую прокрутку каждые 3 секунды
-        setInterval(nextImage, 3000);
-    }
-
-    // Запускаем карусель при загрузке страницы
-    document.addEventListener('DOMContentLoaded', startCarousel);
-</script>
-<script>
-    // Функция для автоматической прокрутки текстовой карусели
-    function startTextCarousel() {
-        const carousel = document.querySelector('.text-carousel');
-        const items = carousel.querySelectorAll('.carousel-item');
-        let currentIndex = 0;
-
-        // Если текстовых блоков меньше 2, клонируем их для создания бесконечного цикла
-        if (items.length === 1) {
-            carousel.appendChild(items[0].cloneNode(true)); // Клонируем единственный блок
-        } else if (items.length === 2) {
-            carousel.appendChild(items[0].cloneNode(true)); // Клонируем первый блок
-            carousel.appendChild(items[1].cloneNode(true)); // Клонируем второй блок
-        }
-
-        // Обновляем список текстовых блоков после клонирования
-        const updatedItems = carousel.querySelectorAll('.carousel-item');
-
-        // Функция для переключения текстовых блоков
-        function nextItem() {
-            currentIndex++;
-            if (currentIndex >= updatedItems.length) {
-                currentIndex = 0; // Возвращаемся к первому блоку
-            }
-            carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-        }
-
-        // Запускаем автоматическую прокрутку каждые 3 секунды
-        setInterval(nextItem, 3000);
-    }
-
-    // Запускаем текстовую карусель при загрузке страницы
-    document.addEventListener('DOMContentLoaded', startTextCarousel);
-</script>
 </body>
-</html>  
+</html>
