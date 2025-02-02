@@ -44,6 +44,9 @@
             background-color: #a0522d;
             transform: scale(1.1);
         }
+        .floating-menu-button {
+    z-index: 1000; /* Убедимся, что кнопка всегда видна */
+}
         header {
             display: flex;
             align-items: center;
@@ -431,7 +434,46 @@
                 });
             }
         }
+let currentIndex = 0;
+const carousel = document.getElementById('text-carousel');
+const items = carousel.querySelectorAll('.carousel-item');
 
+// Функция для перехода к следующему слайду
+function nextSlide() {
+    if (currentIndex < items.length - 1) {
+        currentIndex++;
+    } else {
+        currentIndex = 0; // Возвращаемся к первому слайду
+    }
+    carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+}
+
+// Функция для перехода к предыдущему слайду
+function prevSlide() {
+    if (currentIndex > 0) {
+        currentIndex--;
+    } else {
+        currentIndex = items.length - 1; // Переходим к последнему слайду
+    }
+    carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+}
+
+// Обработчики свайпа
+let startX = 0;
+let endX = 0;
+
+carousel.addEventListener('touchstart', (e) => {
+    startX = e.touches[0].clientX;
+});
+
+carousel.addEventListener('touchend', (e) => {
+    endX = e.changedTouches[0].clientX;
+    if (startX - endX > 50) {
+        nextSlide(); // Свайп влево
+    } else if (endX - startX > 50) {
+        prevSlide(); // Свайп вправо
+    }
+});
         function showInfo(title, description) {
             document.getElementById('info-title').textContent = title;
             document.getElementById('info-description').textContent = description;
