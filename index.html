@@ -24,10 +24,37 @@
             color: #b8860b;
             margin-top: 20px;
         }
+
+        /* Кнопка "Меню" */
         .floating-menu-button {
             position: fixed;
             bottom: 20px;
-            right: 20px;
+            left: 20px; /* Переместили кнопку в левый угол */
+            background-color: #b8860b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, background-color 0.3s ease;
+            z-index: 1000;
+        }
+        .floating-menu-button:hover {
+            background-color: #a0522d;
+            transform: scale(1.1);
+        }
+
+        /* Кнопка "Корзина" */
+        .fixed-cart {
+            position: fixed;
+            bottom: 20px;
+            right: 20px; /* Корзина в правом углу */
+        }
+        .fixed-cart button {
             background-color: #b8860b;
             color: white;
             border: none;
@@ -40,72 +67,76 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease, background-color 0.3s ease;
         }
-        .floating-menu-button:hover {
+        .fixed-cart button:hover {
             background-color: #a0522d;
             transform: scale(1.1);
         }
-        .floating-menu-button {
-    z-index: 1000; /* Убедимся, что кнопка всегда видна */
-}
-        header {
+
+        /* Модальное окно для описания */
+        .info-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .info-modal-content {
+            background-color: #fff8dc;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh; /* Ограничение по высоте */
+            overflow-y: auto; /* Прокрутка для длинных описаний */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .info-modal-content h3 {
+            font-family: 'Roboto', sans-serif;
+            margin: 0 0 15px;
+            font-size: 1.5rem;
+            color: #b8860b;
+        }
+        .info-modal-content p {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* Карусель */
+        .text-carousel {
+            display: flex;
+            overflow-x: hidden;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            position: relative;
+        }
+        .text-carousel::-webkit-scrollbar {
+            display: none;
+        }
+        .carousel-item {
+            min-width: 100%;
+            height: 100px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            padding: 10px;
-            background-color: #fff8dc;
-            border-bottom: 1px solid #d2b48c;
-        }
-        .back-button {
+            justify-content: center;
             font-family: 'Roboto', sans-serif;
+            font-size: 1.2rem;
             font-weight: bold;
-            background-color: #f5f2e9;
             color: #4d382c;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.3s ease;
-        }
-        .back-button:hover {
-            background-color: #a0522d;
-            color: white;
-        }
-        .menu-tabs {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            padding: 10px;
             background-color: #fff8dc;
-            border-bottom: 1px solid #d2b48c;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            scroll-snap-align: start;
+            transition: transform 0.5s ease;
         }
-        .tab-row {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-        }
-        .tab-button {
-            font-family: 'Roboto', sans-serif;
-            font-weight: bold;
-            background-color: #f5f2e9;
-            color: #4d382c;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: transform 0.3s ease, background-color 0.3s ease;
-            flex: 1;
-        }
-        .tab-button:hover {
-            background-color: #a0522d;
-            color: white;
-            transform: scale(1.1);
-        }
-        .tab-button.active {
-            background-color: #b8860b;
-            color: white;
-        }
+
+        /* Элементы меню */
         .menu-item {
             display: flex;
             align-items: center;
@@ -126,8 +157,6 @@
             flex: 1;
         }
         .menu-item button {
-            font-family: 'Roboto', sans-serif;
-            font-weight: bold;
             background-color: #b8860b;
             color: white;
             border: none;
@@ -140,98 +169,13 @@
         .menu-item button:hover {
             background-color: #a0522d;
         }
-        .info-icon {
-            font-size: 1.2rem;
-            color: #b8860b;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        .info-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-        .info-modal-content {
-            background-color: #fff8dc;
-            padding: 20px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-        .info-modal-content h3 {
-            font-family: 'Roboto', sans-serif;
-            margin: 0 0 15px;
-            font-size: 1.5rem;
-            color: #b8860b;
-        }
-        .info-modal-content p {
-            font-family: 'Roboto', sans-serif;
-            font-size: 1rem;
-        }
-        .fixed-cart {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-        }
-        .fixed-cart button {
-            font-family: 'Roboto', sans-serif;
-            font-weight: bold;
-            background-color: #b8860b;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease, background-color 0.3s ease;
-        }
-        .fixed-cart button:hover {
-            background-color: #a0522d;
-            transform: scale(1.1);
-        }
-
-        /* Стили для карусели */
-        .text-carousel {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; /* Для Firefox */
-        }
-        .text-carousel::-webkit-scrollbar {
-            display: none; /* Для Chrome */
-        }
-        .carousel-item {
-            min-width: 100%;
-            height: 100px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Roboto', sans-serif;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #4d382c;
-            background-color: #fff8dc;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            scroll-snap-align: start;
-        }
     </style>
 </head>
 <body>
     <!-- Главный экран -->
     <div id="start-screen">
         <h2>Добро пожаловать в D.O.M!</h2>
-        <div class="text-carousel">
+        <div class="text-carousel" id="text-carousel">
             <div class="carousel-item">🔥 Специальное предложение: скидка 50% на горячие блюда!</div>
             <div class="carousel-item">🎉 Бесплатная доставка при заказе от 1500 рублей.</div>
             <div class="carousel-item">💝 Получите подарок при первом заказе через Telegram.</div>
@@ -396,6 +340,7 @@
     ]
 };
 
+
         let cart = [];
 
         function showMenu() {
@@ -434,46 +379,7 @@
                 });
             }
         }
-let currentIndex = 0;
-const carousel = document.getElementById('text-carousel');
-const items = carousel.querySelectorAll('.carousel-item');
 
-// Функция для перехода к следующему слайду
-function nextSlide() {
-    if (currentIndex < items.length - 1) {
-        currentIndex++;
-    } else {
-        currentIndex = 0; // Возвращаемся к первому слайду
-    }
-    carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-}
-
-// Функция для перехода к предыдущему слайду
-function prevSlide() {
-    if (currentIndex > 0) {
-        currentIndex--;
-    } else {
-        currentIndex = items.length - 1; // Переходим к последнему слайду
-    }
-    carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-}
-
-// Обработчики свайпа
-let startX = 0;
-let endX = 0;
-
-carousel.addEventListener('touchstart', (e) => {
-    startX = e.touches[0].clientX;
-});
-
-carousel.addEventListener('touchend', (e) => {
-    endX = e.changedTouches[0].clientX;
-    if (startX - endX > 50) {
-        nextSlide(); // Свайп влево
-    } else if (endX - startX > 50) {
-        prevSlide(); // Свайп вправо
-    }
-});
         function showInfo(title, description) {
             document.getElementById('info-title').textContent = title;
             document.getElementById('info-description').textContent = description;
@@ -538,6 +444,46 @@ carousel.addEventListener('touchend', (e) => {
         function payByTransfer() {
             alert("Оплатите заказ переводом на карту: 1234 5678 9012 3456");
         }
+
+        // Логика для карусели
+        let currentIndex = 0;
+        const carousel = document.getElementById('text-carousel');
+        const items = carousel.querySelectorAll('.carousel-item');
+
+        function nextSlide() {
+            if (currentIndex < items.length - 1) {
+                currentIndex++;
+            } else {
+                currentIndex = 0; // Возвращаемся к первому слайду
+            }
+            carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+
+        function prevSlide() {
+            if (currentIndex > 0) {
+                currentIndex--;
+            } else {
+                currentIndex = items.length - 1; // Переходим к последнему слайду
+            }
+            carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+
+        // Обработчики свайпа
+        let startX = 0;
+        let endX = 0;
+
+        carousel.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+        });
+
+        carousel.addEventListener('touchend', (e) => {
+            endX = e.changedTouches[0].clientX;
+            if (startX - endX > 50) {
+                nextSlide(); // Свайп влево
+            } else if (endX - startX > 50) {
+                prevSlide(); // Свайп вправо
+            }
+        });
     </script>
 </body>
 </html>
