@@ -195,6 +195,33 @@
             background-color: #a0522d;
             transform: scale(1.1);
         }
+
+        /* Стили для карусели */
+        .text-carousel {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Для Firefox */
+        }
+        .text-carousel::-webkit-scrollbar {
+            display: none; /* Для Chrome */
+        }
+        .carousel-item {
+            min-width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Roboto', sans-serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #4d382c;
+            background-color: #fff8dc;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            scroll-snap-align: start;
+        }
     </style>
 </head>
 <body>
@@ -205,6 +232,8 @@
             <div class="carousel-item">🔥 Специальное предложение: скидка 50% на горячие блюда!</div>
             <div class="carousel-item">🎉 Бесплатная доставка при заказе от 1500 рублей.</div>
             <div class="carousel-item">💝 Получите подарок при первом заказе через Telegram.</div>
+            <div class="carousel-item">🍴 Новые блюда в меню каждую неделю!</div>
+            <div class="carousel-item">🌟 Отзывы наших клиентов — лучшая награда!</div>
         </div>
         <button class="floating-menu-button" onclick="showMenu()">Меню</button>
     </div>
@@ -259,7 +288,7 @@
     <script>
         const tg = window.Telegram.WebApp;
 
-        const menuData = {
+       const menuData = {
     "Мангал": [
         { name: "Шашлык из свинины", price: 900, image: "images/shashlik-svinina.jpg", description: "Нежный шашлык из свинины, маринованный в специях и луке." },
         { name: "Шашлык из баранины", price: 2000, image: "images/shashlik-baranina.jpg", description: "Ароматный шашлык из баранины с травами и чесноком." },
@@ -323,7 +352,7 @@
         { name: "Пирог с картошкой", price: 230, image: "images/pirog-kartoshka.jpg", description: "Пирог с рассыпчатой картошкой и специями." },
         { name: "Пирог с листьями свеклы", price: 300, image: "images/pirog-svekla.jpg", description: "Пирог с листьями свеклы и сыром." },
         { name: "Пирог с капустой", price: 220, image: "images/pirog-kapusta.jpg", description: "Пирог с тушеной капустой и зеленью." },
-                { name: "Пирог с тыквой", price: 220, image: "images/pirog-tykva.jpg", description: "Сладкий пирог с тыквенной начинкой и медом." }
+        { name: "Пирог с тыквой", price: 220, image: "images/pirog-tykva.jpg", description: "Сладкий пирог с тыквенной начинкой и медом." }
     ],
     "Гарниры": [
         { name: "Картофель Фри", price: 120, image: "images/fri.jpg", description: "Хрустящий картофель фри с солью." },
@@ -363,7 +392,6 @@
         { name: "Фруктовый компот", price: 120, image: "images/kompot.jpg", description: "Сладкий компот из сезонных фруктов." }
     ]
 };
-            // Добавьте остальные категории аналогично...
 
         let cart = [];
 
@@ -440,7 +468,7 @@
 
             cart.forEach((item, index) => {
                 const li = document.createElement('li');
-                                li.innerHTML = `
+                li.innerHTML = `
                     ${item.name} - ${item.price} ₽
                     <button onclick="removeFromCart(${index})">Удалить</button>
                 `;
@@ -468,34 +496,6 @@
         function payByTransfer() {
             alert("Оплатите заказ переводом на карту: 1234 5678 9012 3456");
         }
-
-        // Функция для автоматической прокрутки текстовой карусели
-        function startTextCarousel() {
-            const carousel = document.querySelector('.text-carousel');
-            const items = carousel.querySelectorAll('.carousel-item');
-            let currentIndex = 0;
-
-            if (items.length === 1) {
-                carousel.appendChild(items[0].cloneNode(true));
-            } else if (items.length === 2) {
-                carousel.appendChild(items[0].cloneNode(true));
-                carousel.appendChild(items[1].cloneNode(true));
-            }
-
-            const updatedItems = carousel.querySelectorAll('.carousel-item');
-
-            function nextItem() {
-                currentIndex++;
-                if (currentIndex >= updatedItems.length) {
-                    currentIndex = 0;
-                }
-                carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-            }
-
-            setInterval(nextItem, 3000);
-        }
-
-        document.addEventListener('DOMContentLoaded', startTextCarousel);
     </script>
 </body>
 </html>
