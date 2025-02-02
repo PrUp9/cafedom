@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Заказ еды D.O.M</title>
     <!-- Подключение Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Lobster&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <!-- Telegram Web App SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         /* Общие стили */
         body {
-            font-family: 'Helvetica', sans-serif;
+            font-family: 'Roboto', sans-serif;
             background-color: #f5f2e9;
             color: #4d382c;
             margin: 0;
@@ -19,46 +19,54 @@
         }
         h1, h2 {
             text-align: center;
-            font-family: 'Helvetica', sans-serif;
+            font-family: 'Roboto', sans-serif;
             font-weight: bold;
             color: #b8860b;
             margin-top: 20px;
         }
-        .fixed-cart h3 {
-            font-family: 'Helvetica', sans-serif;
+        .floating-menu-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #b8860b;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-family: 'Roboto', sans-serif;
             font-weight: bold;
-            font-size: 1.5rem;
-            color: #b8860b;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, background-color 0.3s ease;
         }
-        .fixed-cart p {
-            font-family: 'Helvetica', sans-serif;
-            font-size: 1.1rem;
+        .floating-menu-button:hover {
+            background-color: #a0522d;
+            transform: scale(1.1);
         }
-        #start-screen {
-            text-align: center;
-            padding: 20px;
-        }
-        .text-carousel {
-            display: flex;
-            overflow: hidden;
-            position: relative;
-            width: 100%;
-            height: 100px;
-        }
-        .carousel-item {
-            min-width: 100%;
-            height: 100%;
+        header {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-family: 'Helvetica', sans-serif;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #4d382c;
+            justify-content: space-between;
+            padding: 10px;
             background-color: #fff8dc;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.5s ease;
+            border-bottom: 1px solid #d2b48c;
+        }
+        .back-button {
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold;
+            background-color: #f5f2e9;
+            color: #4d382c;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
+        }
+        .back-button:hover {
+            background-color: #a0522d;
+            color: white;
         }
         .menu-tabs {
             display: flex;
@@ -74,7 +82,7 @@
             gap: 10px;
         }
         .tab-button {
-            font-family: 'Helvetica', sans-serif;
+            font-family: 'Roboto', sans-serif;
             font-weight: bold;
             background-color: #f5f2e9;
             color: #4d382c;
@@ -95,37 +103,6 @@
             background-color: #b8860b;
             color: white;
         }
-        .side-menu {
-            position: fixed;
-            top: 50%;
-            left: 10px;
-            transform: translateY(-50%);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            z-index: 1000;
-        }
-        .side-button {
-            font-family: 'Helvetica', sans-serif;
-            font-weight: bold;
-            background-color: #f5f2e9;
-            color: #4d382c;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-        .side-button:hover {
-            background-color: #a0522d;
-            color: white;
-            transform: scale(1.1);
-        }
-        .side-button.active {
-            background-color: #b8860b;
-            color: white;
-        }
         .menu-item {
             display: flex;
             align-items: center;
@@ -136,38 +113,37 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .menu-item img {
-            width: 100px;
-            height: 100px;
+            width: 80px;
+            height: 80px;
             object-fit: cover;
             border-radius: 8px;
             margin-right: 15px;
         }
-        .fixed-cart {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #fff8dc;
-            padding: 10px;
-            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            border-top: 1px solid #d2b48c;
+        .menu-item .details {
+            flex: 1;
         }
-        .fixed-cart button {
-            font-family: 'Helvetica', sans-serif;
+        .menu-item button {
+            font-family: 'Roboto', sans-serif;
             font-weight: bold;
             background-color: #b8860b;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease;
         }
-        .fixed-cart button:hover {
+        .menu-item button:hover {
             background-color: #a0522d;
         }
-        .cart-modal {
+        .info-icon {
+            font-size: 1.2rem;
+            color: #b8860b;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .info-modal {
             display: none;
             position: fixed;
             top: 0;
@@ -179,7 +155,7 @@
             align-items: center;
             z-index: 2000;
         }
-        .cart-modal-content {
+        .info-modal-content {
             background-color: #fff8dc;
             padding: 20px;
             border-radius: 10px;
@@ -187,39 +163,37 @@
             max-width: 400px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
-        .cart-modal-content h3 {
-            font-family: 'Helvetica', sans-serif;
+        .info-modal-content h3 {
+            font-family: 'Roboto', sans-serif;
             margin: 0 0 15px;
             font-size: 1.5rem;
             color: #b8860b;
         }
-        .cart-modal-content ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            max-height: 300px;
-            overflow-y: auto;
+        .info-modal-content p {
+            font-family: 'Roboto', sans-serif;
+            font-size: 1rem;
         }
-        .cart-modal-content li {
-            font-family: 'Helvetica', sans-serif;
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #d2b48c;
+        .fixed-cart {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
         }
-        .cart-modal-content button {
-            font-family: 'Helvetica', sans-serif;
+        .fixed-cart button {
+            font-family: 'Roboto', sans-serif;
             font-weight: bold;
             background-color: #b8860b;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1rem;
             cursor: pointer;
-            margin-top: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, background-color 0.3s ease;
         }
-        .cart-modal-content button:hover {
+        .fixed-cart button:hover {
             background-color: #a0522d;
+            transform: scale(1.1);
         }
     </style>
 </head>
@@ -232,13 +206,15 @@
             <div class="carousel-item">🎉 Бесплатная доставка при заказе от 1500 рублей.</div>
             <div class="carousel-item">💝 Получите подарок при первом заказе через Telegram.</div>
         </div>
-        <p>Сегодня действуют скидки до 50% на горячие блюда!</p>
-        <button onclick="showMenu()">Перейти к меню</button>
+        <button class="floating-menu-button" onclick="showMenu()">Меню</button>
     </div>
 
     <!-- Экран меню -->
     <div id="menu-screen" style="display: none;">
-        <h1>“D.O.M”</h1>
+        <header>
+            <button class="back-button" onclick="goBack()">← Назад</button>
+            <h1>“D.O.M”</h1>
+        </header>
         <div class="menu-tabs">
             <div class="tab-row">
                 <button class="tab-button active" onclick="switchCategory('Мангал')">Мангал</button>
@@ -256,20 +232,23 @@
         <div id="menu-items"></div>
     </div>
 
-    <!-- Компактная корзина -->
-    <div class="fixed-cart">
-        <h3>Корзина</h3>
-        <p>Общая сумма: <span id="total">0</span> ₽</p>
-        <button onclick="openCartModal()">Посмотреть корзину</button>
-        <div class="payment-options">
-            <button onclick="payWithTelegram()">Оплатить онлайн</button>
-            <button onclick="payByTransfer()">Оплатить переводом</button>
+    <!-- Модальное окно для описания блюда -->
+    <div class="info-modal" id="info-modal">
+        <div class="info-modal-content">
+            <h3 id="info-title"></h3>
+            <p id="info-description"></p>
+            <button onclick="closeInfoModal()">Закрыть</button>
         </div>
     </div>
 
-    <!-- Модальное окно для просмотра корзины -->
-    <div class="cart-modal" id="cart-modal">
-        <div class="cart-modal-content">
+    <!-- Компактная корзина -->
+    <div class="fixed-cart">
+        <button onclick="openCartModal()">🛒 Корзина (<span id="cart-count">0</span>)</button>
+    </div>
+
+    <!-- Модальное окно для корзины -->
+    <div class="info-modal" id="cart-modal">
+        <div class="info-modal-content">
             <h3>Корзина</h3>
             <ul id="cart-modal-items"></ul>
             <p>Общая сумма: <span id="modal-total">0</span> ₽</p>
@@ -277,125 +256,114 @@
         </div>
     </div>
 
-    <!-- Боковая панель -->
-    <div class="side-menu">
-        <button class="side-button" onclick="switchCategory('Мангал')">Мангал</button>
-        <button class="side-button" onclick="switchCategory('Горячие блюда')">Горячие блюда</button>
-        <button class="side-button" onclick="switchCategory('Завтраки')">Завтраки</button>
-        <button class="side-button" onclick="switchCategory('Холодные закуски')">Холодные закуски</button>
-        <button class="side-button" onclick="switchCategory('Салаты')">Салаты</button>
-        <button class="side-button" onclick="switchCategory('Осетинские пироги')">Осетинские пироги</button>
-        <button class="side-button" onclick="switchCategory('Гарниры')">Гарниры</button>
-        <button class="side-button" onclick="switchCategory('Супы')">Супы</button>
-    </div>
-
     <script>
         const tg = window.Telegram.WebApp;
 
         const menuData = {
-            "Мангал": [
-                { name: "Шашлык из свинины", price: 900, image: "images/shashlik-svinina.jpg" },
-                { name: "Шашлык из баранины", price: 2000, image: "images/shashlik-baranina.jpg" },
-                { name: "Шашлык из говядины", price: 2500, image: "images/shashlik-govyadina.jpg" },
-                { name: "Шашлык из курицы", price: 650, image: "images/shashlik-kurica.jpg" },
-                { name: "Шашлык из семги", price: 2700, image: "images/shashlik-semga.jpg" },
-                { name: "Люля-кебаб из говядины", price: 120, image: "images/lyulya-govyadina.jpg" },
-                { name: "Люля-кебаб из курицы", price: 100, image: "images/lyulya-kurica.jpg" },
-                { name: "Карп", price: 800, image: "images/karp.jpg" },
-                { name: "Форель", price: 2000, image: "images/forel.jpg" },
-                { name: "Грибы", price: 1000, image: "images/griby.jpg" },
-                { name: "Овощи", price: 1000, image: "images/ovoshchi.jpg" }
-            ],
-            "Горячие блюда": [
-                { name: "Мясо с овощами", price: 295, image: "images/myaso-ovoshchi.jpg" },
-                { name: "Плов из говядины", price: 285, image: "images/plov-govyadina.jpg" },
-                { name: "Куриная отбивная", price: 220, image: "images/kurinaya-otbivnaya.jpg" },
-                { name: "Котлета по-киевски", price: 190, image: "images/kotleta-po-kievski.jpg" },
-                { name: "Жаркое с говядиной", price: 550, image: "images/zharkoe-govyadina.jpg" },
-                { name: "Жаркое с грибами", price: 275, image: "images/zharkoe-griby.jpg" },
-                { name: "Жаркое с курицей", price: 370, image: "images/zharkoe-kurica.jpg" },
-                { name: "Печень говяжья", price: 230, image: "images/pechen-govyadina.jpg" },
-                { name: "Семга по-царски", price: 820, image: "images/semga-tsarski.jpg" },
-                { name: "Наггетсы", price: 680, image: "images/naggetsy.jpg" }
-            ],
-            "Завтраки": [
-                { name: "Яичница глазунья", price: 50, image: "images/yichnitsa-glazunya.jpg" },
-                { name: "Блинчики с вареньем", price: 120, image: "images/blinchiki-varene.jpg" },
-                { name: "Блинчики со сгущёнкой", price: 110, image: "images/blinchiki-sgushyonka.jpg" },
-                { name: "Каша овсяная", price: 80, image: "images/kasha-ovsyanaya.jpg" },
-                { name: "Каша рисовая", price: 80, image: "images/kasha-risovaya.jpg" },
-                { name: "Сырники", price: 65, image: "images/syrniki.jpg" },
-                { name: "Бутерброд с сыром", price: 65, image: "images/buterbrod-syr.jpg" },
-                { name: "Бутерброд с ветчиной", price: 70, image: "images/buterbrod-vetchina.jpg" },
-                { name: "Сосиски Баварские с сыром", price: 70, image: "images/sosiski-bavarskie.jpg" }
-            ],
-            "Холодные закуски": [
-                { name: "Сыр с зеленью", price: 250, image: "images/syr-zelen.jpg" },
-                { name: "Соленья", price: 210, image: "images/soleynya.jpg" },
-                { name: "Овощная нарезка", price: 270, image: "images/ovoshchnaya-narezka.jpg" },
-                { name: "Мясная нарезка", price: 850, image: "images/myasnaya-narezka.jpg" },
-                { name: "Рыбная нарезка", price: 550, image: "images/rybnaya-narezka.jpg" },
-                { name: "Баклажаны с орехами", price: 150, image: "images/baklazhany-orekhi.jpg" },
-                                { name: "Грибы фаршированные сыром", price: 290, image: "images/griby-syrom.jpg" },
-                { name: "Оливки, маслины", price: 200, image: "images/olivki-masliny.jpg" },
-                { name: "Тарталетки с маслом и красной икрой", price: 270, image: "images/tartalatki-ikra.jpg" }
-            ],
-            "Салаты": [
-                { name: "Свежий", price: 210, image: "images/svezhiy-salat.jpg" },
-                { name: "Оливье", price: 260, image: "images/olivye.jpg" },
-                { name: "Крабовый", price: 200, image: "images/kraboviy.jpg" },
-                { name: "Цезарь с курицей", price: 305, image: "images/cezar-kurica.jpg" },
-                { name: "Цезарь с креветками", price: 435, image: "images/cezar-krevetki.jpg" },
-                { name: "Греческий", price: 280, image: "images/grecheskiy.jpg" },
-                { name: "Цезарь с семгой", price: 460, image: "images/cezar-semga.jpg" },
-                { name: "Красное море", price: 220, image: "images/krasnoe-more.jpg" }
-            ],
-            "Осетинские пироги": [
-                { name: "Пирог с мясом", price: 650, image: "images/pirog-myaso.jpg" },
-                { name: "Пирог с сыром", price: 300, image: "images/pirog-syr.jpg" },
-                { name: "Пирог с картошкой", price: 230, image: "images/pirog-kartoshka.jpg" },
-                { name: "Пирог с листьями свеклы", price: 300, image: "images/pirog-svekla.jpg" },
-                { name: "Пирог с капустой", price: 220, image: "images/pirog-kapusta.jpg" },
-                { name: "Пирог с тыквой", price: 220, image: "images/pirog-tykva.jpg" }
-            ],
-            "Гарниры": [
-                { name: "Картофель Фри", price: 120, image: "images/fri.jpg" },
-                { name: "Картофель по деревенски", price: 150, image: "images/derevenskiy.jpg" },
-                { name: "Картофельное пюре", price: 110, image: "images/pure.jpg" },
-                { name: "Гречка", price: 80, image: "images/grechka.jpg" },
-                { name: "Овощи барбекю", price: 150, image: "images/ovoshchi-barbekyu.jpg" }
-            ],
-            "Супы": [
-                { name: "Лывжа из говядины", price: 310, image: "images/lyvzha.jpg" },
-                { name: "Суп-лапша из курицы", price: 210, image: "images/lapsha-kurica.jpg" },
-                { name: "Чанах", price: 290, image: "images/chanah.jpg" },
-                { name: "Грибной суп-пюре", price: 250, image: "images/gribnoy-sup.jpg" },
-                { name: "Борщ", price: 180, image: "images/borsch.jpg" }
-            ],
-            "Соусы": [
-                { name: "Клюквенный", price: 150, image: "images/klyukvenniy.jpg" },
-                { name: "Тар-тар", price: 80, image: "images/tar-tar.jpg" },
-                { name: "Сацебели", price: 70, image: "images/satsebeli.jpg" },
-                { name: "Цахтон", price: 150, image: "images/tsakhton.jpg" }
-            ],
-            "Чай": [
-                { name: "Зеленый", price: 100, image: "images/zeleniy-chay.jpg" },
-                { name: "Черный", price: 100, image: "images/cherniy-chay.jpg" },
-                { name: "Травяной", price: 100, image: "images/travyanoy-chay.jpg" },
-                { name: "Облепиховый", price: 150, image: "images/oblepihoviy-chay.jpg" }
-            ],
-            "Кофе": [
-                { name: "Заварной Lavazza", price: 100, image: "images/lavazza.jpg" },
-                { name: "Растворимый", price: 50, image: "images/rastvorimiy-kofe.jpg" },
-                { name: "Скандинавский", price: 100, image: "images/scandinavian-coffee.jpg" }
-            ],
-            "Выпечка": [
-                { name: "Лаваш", price: 50, image: "images/lavash.jpg" }
-            ],
-            "Домашние напитки": [
-                { name: "Фруктовый компот", price: 120, image: "images/kompot.jpg" }
-            ]
-        };
+    "Мангал": [
+        { name: "Шашлык из свинины", price: 900, image: "images/shashlik-svinina.jpg", description: "Нежный шашлык из свинины, маринованный в специях и луке." },
+        { name: "Шашлык из баранины", price: 2000, image: "images/shashlik-baranina.jpg", description: "Ароматный шашлык из баранины с травами и чесноком." },
+        { name: "Шашлык из говядины", price: 2500, image: "images/shashlik-govyadina.jpg", description: "Сочный шашлык из говядины, идеально прожаренный на углях." },
+        { name: "Шашлык из курицы", price: 650, image: "images/shashlik-kurica.jpg", description: "Легкий шашлык из куриного филе с цитрусовым маринадом." },
+        { name: "Шашлык из семги", price: 2700, image: "images/shashlik-semga.jpg", description: "Деликатесный шашлык из свежей семги с лимоном." },
+        { name: "Люля-кебаб из говядины", price: 120, image: "images/lyulya-govyadina.jpg", description: "Традиционные люля-кебабы из говядины с зеленью." },
+        { name: "Люля-кебаб из курицы", price: 100, image: "images/lyulya-kurica.jpg", description: "Легкие люля-кебабы из куриного мяса с перцем." },
+        { name: "Карп", price: 800, image: "images/karp.jpg", description: "Запеченный карп с травами и лимоном." },
+        { name: "Форель", price: 2000, image: "images/forel.jpg", description: "Свежая форель, запеченная с маслом и специями." },
+        { name: "Грибы", price: 1000, image: "images/griby.jpg", description: "Гриль-грибы с чесночным соусом." },
+        { name: "Овощи", price: 1000, image: "images/ovoshchi.jpg", description: "Сезонные овощи, обжаренные на гриле." }
+    ],
+    "Горячие блюда": [
+        { name: "Мясо с овощами", price: 295, image: "images/myaso-ovoshchi.jpg", description: "Сочное мясо с сезонными овощами в сливочном соусе." },
+        { name: "Плов из говядины", price: 285, image: "images/plov-govyadina.jpg", description: "Традиционный плов с нежной говядиной и зирой." },
+        { name: "Куриная отбивная", price: 220, image: "images/kurinaya-otbivnaya.jpg", description: "Хрустящая куриная отбивная с травами и специями." },
+        { name: "Котлета по-киевски", price: 190, image: "images/kotleta-po-kievski.jpg", description: "Классическая котлета с сюрпризом внутри — сливочным маслом." },
+        { name: "Жаркое с говядиной", price: 550, image: "images/zharkoe-govyadina.jpg", description: "Сытное жаркое с говядиной, картофелем и морковью." },
+        { name: "Жаркое с грибами", price: 275, image: "images/zharkoe-griby.jpg", description: "Ароматное жаркое с грибами и сливками." },
+        { name: "Жаркое с курицей", price: 370, image: "images/zharkoe-kurica.jpg", description: "Легкое жаркое с курицей и овощами." },
+        { name: "Печень говяжья", price: 230, image: "images/pechen-govyadina.jpg", description: "Обжаренная говяжья печень с луком." },
+        { name: "Семга по-царски", price: 820, image: "images/semga-tsarski.jpg", description: "Семга, запеченная с сыром и сливками." },
+        { name: "Наггетсы", price: 680, image: "images/naggetsy.jpg", description: "Хрустящие куриные наггетсы с соусом на выбор." }
+    ],
+    "Завтраки": [
+        { name: "Яичница глазунья", price: 50, image: "images/yichnitsa-glazunya.jpg", description: "Простая и вкусная яичница с желтком." },
+        { name: "Блинчики с вареньем", price: 120, image: "images/blinchiki-varene.jpg", description: "Тонкие блинчики с домашним вареньем." },
+        { name: "Блинчики со сгущёнкой", price: 110, image: "images/blinchiki-sgushyonka.jpg", description: "Сладкие блинчики с молочной сгущёнкой." },
+        { name: "Каша овсяная", price: 80, image: "images/kasha-ovsyanaya.jpg", description: "Полезная овсяная каша с фруктами и медом." },
+        { name: "Каша рисовая", price: 80, image: "images/kasha-risovaya.jpg", description: "Лёгкая рисовая каша с молоком и изюмом." },
+        { name: "Сырники", price: 65, image: "images/syrniki.jpg", description: "Пышные сырники с сахарной пудрой." },
+        { name: "Бутерброд с сыром", price: 65, image: "images/buterbrod-syr.jpg", description: "Хрустящий бутерброд с сыром и зеленью." },
+        { name: "Бутерброд с ветчиной", price: 70, image: "images/buterbrod-vetchina.jpg", description: "Бутерброд с ветчиной и свежими огурцами." },
+        { name: "Сосиски Баварские с сыром", price: 70, image: "images/sosiski-bavarskie.jpg", description: "Сочные сосиски с расплавленным сыром." }
+    ],
+    "Холодные закуски": [
+        { name: "Сыр с зеленью", price: 250, image: "images/syr-zelen.jpg", description: "Сырное ассорти с зеленью и оливками." },
+        { name: "Соленья", price: 210, image: "images/soleynya.jpg", description: "Домашние соленья из огурцов, помидоров и капусты." },
+        { name: "Овощная нарезка", price: 270, image: "images/ovoshchnaya-narezka.jpg", description: "Свежая нарезка из сезонных овощей." },
+        { name: "Мясная нарезка", price: 850, image: "images/myasnaya-narezka.jpg", description: "Деликатесная нарезка из ветчины и колбас." },
+        { name: "Рыбная нарезка", price: 550, image: "images/rybnaya-narezka.jpg", description: "Нарезка из семги, форели и копченой рыбы." },
+        { name: "Баклажаны с орехами", price: 150, image: "images/baklazhany-orekhi.jpg", description: "Баклажаны, фаршированные орехами и зеленью." },
+        { name: "Грибы фаршированные сыром", price: 290, image: "images/griby-syrom.jpg", description: "Грибы, фаршированные сыром и чесноком." },
+        { name: "Оливки, маслины", price: 200, image: "images/olivki-masliny.jpg", description: "Смесь оливок и маслин с травами." },
+        { name: "Тарталетки с маслом и красной икрой", price: 270, image: "images/tartalatki-ikra.jpg", description: "Тарталетки с маслом и деликатесной красной икрой." }
+    ],
+    "Салаты": [
+        { name: "Свежий", price: 210, image: "images/svezhiy-salat.jpg", description: "Салат из свежих овощей с оливковым маслом." },
+        { name: "Оливье", price: 260, image: "images/olivye.jpg", description: "Классический салат Оливье с колбасой и овощами." },
+        { name: "Крабовый", price: 200, image: "images/kraboviy.jpg", description: "Легкий салат с крабовыми палочками и кукурузой." },
+        { name: "Цезарь с курицей", price: 305, image: "images/cezar-kurica.jpg", description: "Салат Цезарь с куриной грудкой и сухариками." },
+        { name: "Цезарь с креветками", price: 435, image: "images/cezar-krevetki.jpg", description: "Салат Цезарь с тигровыми креветками." },
+        { name: "Греческий", price: 280, image: "images/grecheskiy.jpg", description: "Салат Греческий с оливками и фетой." },
+        { name: "Цезарь с семгой", price: 460, image: "images/cezar-semga.jpg", description: "Салат Цезарь с нежной семгой." },
+        { name: "Красное море", price: 220, image: "images/krasnoe-more.jpg", description: "Салат с морепродуктами и овощами." }
+    ],
+    "Осетинские пироги": [
+        { name: "Пирог с мясом", price: 650, image: "images/pirog-myaso.jpg", description: "Сытный осетинский пирог с сочным мясом." },
+        { name: "Пирог с сыром", price: 300, image: "images/pirog-syr.jpg", description: "Пирог с ароматным сыром и зеленью." },
+        { name: "Пирог с картошкой", price: 230, image: "images/pirog-kartoshka.jpg", description: "Пирог с рассыпчатой картошкой и специями." },
+        { name: "Пирог с листьями свеклы", price: 300, image: "images/pirog-svekla.jpg", description: "Пирог с листьями свеклы и сыром." },
+        { name: "Пирог с капустой", price: 220, image: "images/pirog-kapusta.jpg", description: "Пирог с тушеной капустой и зеленью." },
+                { name: "Пирог с тыквой", price: 220, image: "images/pirog-tykva.jpg", description: "Сладкий пирог с тыквенной начинкой и медом." }
+    ],
+    "Гарниры": [
+        { name: "Картофель Фри", price: 120, image: "images/fri.jpg", description: "Хрустящий картофель фри с солью." },
+        { name: "Картофель по деревенски", price: 150, image: "images/derevenskiy.jpg", description: "Картофель по-деревенски с травами." },
+        { name: "Картофельное пюре", price: 110, image: "images/pure.jpg", description: "Нежное картофельное пюре со сливочным маслом." },
+        { name: "Гречка", price: 80, image: "images/grechka.jpg", description: "Рассыпчатая гречка с луком и морковью." },
+        { name: "Овощи барбекю", price: 150, image: "images/ovoshchi-barbekyu.jpg", description: "Обжаренные на гриле овощи с соусом." }
+    ],
+    "Супы": [
+        { name: "Лывжа из говядины", price: 310, image: "images/lyvzha.jpg", description: "Традиционный осетинский суп с говядиной." },
+        { name: "Суп-лапша из курицы", price: 210, image: "images/lapsha-kurica.jpg", description: "Легкий суп с домашней лапшой и курицей." },
+        { name: "Чанах", price: 290, image: "images/chanah.jpg", description: "Ароматный гороховый суп с копченостями." },
+        { name: "Грибной суп-пюре", price: 250, image: "images/gribnoy-sup.jpg", description: "Нежный суп-пюре из лесных грибов." },
+        { name: "Борщ", price: 180, image: "images/borsch.jpg", description: "Классический украинский борщ с капустой и свеклой." }
+    ],
+    "Соусы": [
+        { name: "Клюквенный", price: 150, image: "images/klyukvenniy.jpg", description: "Освежающий клюквенный соус для мяса." },
+        { name: "Тар-тар", price: 80, image: "images/tar-tar.jpg", description: "Классический тартар-соус для рыбы." },
+        { name: "Сацебели", price: 70, image: "images/satsebeli.jpg", description: "Острый грузинский соус из томатов и специй." },
+        { name: "Цахтон", price: 150, image: "images/tsakhton.jpg", description: "Ароматный чесночный соус для шашлыка." }
+    ],
+    "Чай": [
+        { name: "Зеленый", price: 100, image: "images/zeleniy-chay.jpg", description: "Освежающий зеленый чай с лимоном." },
+        { name: "Черный", price: 100, image: "images/cherniy-chay.jpg", description: "Ароматный черный чай с бергамотом." },
+        { name: "Травяной", price: 100, image: "images/travyanoy-chay.jpg", description: "Успокаивающий травяной чай с мятой." },
+        { name: "Облепиховый", price: 150, image: "images/oblepihoviy-chay.jpg", description: "Витаминный облепиховый чай с медом." }
+    ],
+    "Кофе": [
+        { name: "Заварной Lavazza", price: 100, image: "images/lavazza.jpg", description: "Ароматный заварной кофе Lavazza." },
+        { name: "Растворимый", price: 50, image: "images/rastvorimiy-kofe.jpg", description: "Классический растворимый кофе." },
+        { name: "Скандинавский", price: 100, image: "images/scandinavian-coffee.jpg", description: "Легкий скандинавский кофе с нотками ягод." }
+    ],
+    "Выпечка": [
+        { name: "Лаваш", price: 50, image: "images/lavash.jpg", description: "Тонкий армянский лаваш для закусок." }
+    ],
+    "Домашние напитки": [
+        { name: "Фруктовый компот", price: 120, image: "images/kompot.jpg", description: "Сладкий компот из сезонных фруктов." }
+    ]
+};
+            // Добавьте остальные категории аналогично...
 
         let cart = [];
 
@@ -403,6 +371,11 @@
             document.getElementById('start-screen').style.display = 'none';
             document.getElementById('menu-screen').style.display = 'block';
             switchCategory('Мангал'); // По умолчанию показываем первый раздел
+        }
+
+        function goBack() {
+            document.getElementById('menu-screen').style.display = 'none';
+            document.getElementById('start-screen').style.display = 'block';
         }
 
         function switchCategory(category) {
@@ -423,11 +396,22 @@
                             <strong>${item.name}</strong><br>
                             ${item.price} ₽
                         </div>
+                        <span class="info-icon" onclick="showInfo('${item.name}', '${item.description}')">ℹ️</span>
                         <button onclick="addToCart('${category}', '${item.name}')">Добавить</button>
                     `;
                     menuItemsDiv.appendChild(itemDiv);
                 });
             }
+        }
+
+        function showInfo(title, description) {
+            document.getElementById('info-title').textContent = title;
+            document.getElementById('info-description').textContent = description;
+            document.getElementById('info-modal').style.display = 'flex';
+        }
+
+        function closeInfoModal() {
+            document.getElementById('info-modal').style.display = 'none';
         }
 
         function addToCart(category, itemName) {
@@ -437,8 +421,8 @@
         }
 
         function updateCart() {
-            const totalElement = document.getElementById('total');
-            const modalTotalElement = document.getElementById('modal-total');
+            const totalElement = document.getElementById('modal-total');
+            const cartCountElement = document.getElementById('cart-count');
             let sum = 0;
 
             cart.forEach(item => {
@@ -446,7 +430,7 @@
             });
 
             totalElement.textContent = sum;
-            modalTotalElement.textContent = sum;
+            cartCountElement.textContent = cart.length;
         }
 
         function openCartModal() {
@@ -456,7 +440,7 @@
 
             cart.forEach((item, index) => {
                 const li = document.createElement('li');
-                li.innerHTML = `
+                                li.innerHTML = `
                     ${item.name} - ${item.price} ₽
                     <button onclick="removeFromCart(${index})">Удалить</button>
                 `;
@@ -491,31 +475,26 @@
             const items = carousel.querySelectorAll('.carousel-item');
             let currentIndex = 0;
 
-            // Если текстовых блоков меньше 2, клонируем их для создания бесконечного цикла
             if (items.length === 1) {
-                carousel.appendChild(items[0].cloneNode(true)); // Клонируем единственный блок
+                carousel.appendChild(items[0].cloneNode(true));
             } else if (items.length === 2) {
-                carousel.appendChild(items[0].cloneNode(true)); // Клонируем первый блок
-                carousel.appendChild(items[1].cloneNode(true)); // Клонируем второй блок
+                carousel.appendChild(items[0].cloneNode(true));
+                carousel.appendChild(items[1].cloneNode(true));
             }
 
-            // Обновляем список текстовых блоков после клонирования
             const updatedItems = carousel.querySelectorAll('.carousel-item');
 
-            // Функция для переключения текстовых блоков
             function nextItem() {
                 currentIndex++;
                 if (currentIndex >= updatedItems.length) {
-                    currentIndex = 0; // Возвращаемся к первому блоку
+                    currentIndex = 0;
                 }
                 carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
             }
 
-            // Запускаем автоматическую прокрутку каждые 3 секунды
             setInterval(nextItem, 3000);
         }
 
-        // Запускаем текстовую карусель при загрузке страницы
         document.addEventListener('DOMContentLoaded', startTextCarousel);
     </script>
 </body>
